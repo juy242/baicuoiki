@@ -47,10 +47,12 @@
 .flexslider .slides > li {
   display: none;
   -webkit-backface-visibility: hidden;
+  
 }
 .flexslider .slides img {
   width: 100%;
   display: block;
+
 }
 .flexslider .slides:after {
   /*content: "\0020";*/
@@ -260,6 +262,7 @@ html[xmlns] .flexslider .slides {
   opacity: 1;
   cursor: default;
 }
+
 /* ====================================================================================================================
  * RESPONSIVE
  * ====================================================================================================================*/
@@ -272,4 +275,6 @@ html[xmlns] .flexslider .slides {
     opacity: 1;
     right: 10px;
   }
+
+  
 }

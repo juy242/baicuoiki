@@ -143,11 +143,11 @@ if(isset($_POST['order'])){
         $mail->isSMTP();                                            // sử dụng SMTP
         $mail->Host       = 'smtp.gmail.com';                       // SMTP server
         $mail->SMTPAuth   = true;                                   // bật chế độ xác thực SMTP
-        $mail->Username   = 'tringuyen25081998@gmail.com';        // tài khoản đăng nhập SMTP
-        $mail->Password   = 'hhyuyeufiywdefof';                         // mật khẩu đăng nhập SMTP
+        $mail->Username   = 'laclacshoes@gmail.com';        // tài khoản đăng nhập SMTP
+        $mail->Password   = 'vuhycycmugcawimu';                         // mật khẩu đăng nhập SMTP
         $mail->SMTPSecure = 'tls';                                  // giao thức bảo mật TLS
         $mail->Port       = 587;
-        $mail->setFrom('tringuyen25081998@gmail.com', 'Lac Lac Shoes');          // địa chỉ email và tên người gửi
+        $mail->setFrom('laclacshoes@gmail.com', 'Lac Lac Shoes');          // địa chỉ email và tên người gửi
         $mail->addAddress($kh['Email'], $kh['TenKH']); // địa chỉ email và tên người nhận
         $mail->Subject = ' Lac Lac Shoes - DON HANG CUA BAN';                               // tiêu đề email
         $mail->Body    = $message;     
@@ -162,4 +162,3 @@ if(isset($_POST['order'])){
     }
 }
 ?>
-

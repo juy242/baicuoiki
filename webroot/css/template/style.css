@@ -7528,7 +7528,7 @@ h1, h2, h3, h4, h5,
         transform: translate3d(0, 0, 0); }
 
 #colorlib-hero {
-  height: 600px;
+  height: 77vh;
   background: #fff url(../images/loader.gif) no-repeat center center;
   width: 100%;
   float: left;
@@ -7548,7 +7548,7 @@ h1, h2, h3, h4, h5,
         background-repeat: no-repeat;
         background-size: cover;
         background-position: center center;
-        height: 600px;
+        height: 77vh;
         position: relative; }
         #colorlib-hero .flexslider .slides li .overlay {
           position: absolute;
