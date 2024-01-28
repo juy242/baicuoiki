@@ -44,6 +44,7 @@
     <!--  style of you -->
     <link rel="stylesheet" href="webroot/css/style.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.7.1/dist/leaflet.css" />
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <script src="https://cdn.jsdelivr.net/npm/leaflet@1.7.1/dist/leaflet.js"></script>
 </head>
 
@@ -61,12 +62,12 @@
                             </div>
                         </div>
                         <div class="col-sm-5 col-md-5">
-                            <form action="?view=products-search" class="search-wrap" method="post">
+                            <form action="index.php?view=products-search" class="search-wrap" method="POST">
                                 <div class="form-group">
-                                    <input type="search" class="form-control search" name="key"
+                                    <input type="search" class="form-control search" name="tukhoa"
                                         placeholder=" Tìm kiếm">
-                                    <button class="btn btn-primary submit-search text-center" type="submit"><i
-                                            class="fas fa-magnifying-glass"></i></button>
+                                    <button class="btn btn-primary submit-search text-center" name="timkiem"
+                                        type="submit"><i class="fas fa-magnifying-glass"></i></button>
                                 </div>
                             </form>
                         </div>
@@ -80,21 +81,41 @@
                                 <li class="active"><a href="?view">Trang Chủ</a></li>
                                 <li class="has-dropdown">
                                     <a href="#">Danh Mục</a>
-                                    <ul class="dropdown"><?php ;$category=categorys();
-										 while ($row=(mysqli_fetch_array($category)))  {
-											echo '	<li><a href="?view=products-category&id='.$row['MaNCC'].'">'.$row['TenNCC'].'</a></li>';
-										} ?>
-
+                                    <ul class="dropdown">
+                                        <?php
+                                $category = categorys();
+                                while ($row = (mysqli_fetch_array($category))) {
+                                    echo '<li><a href="?view=products-category&id=' . $row['MaNCC'] . '">' . $row['TenNCC'] . '</a></li>';
+                                }
+                                ?>
                                     </ul>
                                 </li>
                                 <li><a href="?view=products">Sản Phẩm</a></li>
                                 <li><a href="?view=about">Về Chúng Tôi</a></li>
                                 <li><a href="?view=contact">Liên Hệ</a></li>
-                                <?php $dem=0; if(isset($_SESSION['cart_product'])){ foreach ($_SESSION['cart_product'] as $item_cart){$dem=$dem+$item_cart['SoLuong'];}}?>
+                                <?php
+                                $dem = 0;
+                                if (isset($_SESSION['cart_product'])) {
+                                    foreach ($_SESSION['cart_product'] as $item_cart) {
+                                        $dem = $dem + $item_cart['SoLuong'];
+                                    }
+                                }
+                                ?>
 
-                                <li class="cart"><a href="?view=cart"><i class="fas fa-basket-shopping"></i> Giỏ Hàng
-                                        [<?php echo $dem; ?>]</a></li>
+                                <li class="cart">
+                                    <a href="?view=cart">
+                                        <i class="fas fa-basket-shopping"></i> Giỏ Hàng
+                                        <?php
+                                    if ($dem > 0) {
+                                        echo '<b style="color: red;">[' . $dem . ']</b>';
+                                    } else {
+                                        echo '[' . $dem . ']';
+                                    }
+                                    ?>
+                                    </a>
+                                </li>
                             </ul>
+
                         </div>
                     </div>
                 </div>
@@ -107,14 +128,13 @@
                                 <div class="owl-carousel2">
                                     <div class="item">
                                         <div class="col">
-                                            <h3><a href="#">Giảm giá 25% (Hầu hết) Mọi thứ! Sử dụng mã: Giảm giá mùa
+                                            <h3><a href="#">Giảm giá 25% Mọi thứ! Sử dụng mã: Giảm giá mùa
                                                     hè</a></h3>
                                         </div>
                                     </div>
                                     <div class="item">
                                         <div class="col">
-                                            <h3><a href="#">Giảm giá lớn nhất của chúng tôi. giảm 50% cho tất cả giày
-                                                    mùa hè</a></h3>
+                                            <h3><a href="#">Giảm giá lớn nhất giảm 50% cho tất cả giày mùa hè</a></h3>
                                         </div>
                                     </div>
                                 </div>

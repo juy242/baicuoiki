@@ -38,7 +38,7 @@ function checklogin($email,$password){
 // lấy danh sách sản phẩm
 function productAll(){
   global $conn;
-  $sql=" SELECT * FROM `sanpham`  limit 12" ;
+  $sql=" SELECT * FROM `sanpham` limit 12" ;
   $resulf=mysqli_query($conn,$sql);
   $count=mysqli_num_rows($resulf);    
   if($count==0){
@@ -64,17 +64,23 @@ function product_rand(){
 // tìm kiếm sản phẩm 
 function product_search($key){
   global $conn;
-  $sql="SELECT * FROM `sanpham` WHERE `TenSP`  LIKE N'%".$key."%' ";
-  $resulf=mysqli_query($conn,$sql);
-  $count=mysqli_num_rows($resulf);    
-  if($count==0){
-      return false;
-    }else{
-      return  $resulf;
-    }     
+  $sql = "SELECT * FROM `sanpham` WHERE `TenSP` LIKE '%".$key."%' ";
+  $result = mysqli_query($conn, $sql);
+  
+  if (!$result) {
+      die("Query failed: " . mysqli_error($conn));
+  }
+
+  $count = mysqli_num_rows($result);
+
+  if ($count == 0) {
+      return array(); // return an empty array when no results
+  } else {
+      return $result;
+  }
+
   mysqli_close($conn);
 }
-// lấy 1 product 
 function product($id){
   global $conn;
   $sql="SELECT * FROM sanpham WHERE `MaSP` = $id";
@@ -115,31 +121,51 @@ function price_sale($id,$gia){
   }
   mysqli_close($conn);
 }
-// lấy  product detail
-function product_detail_color($id){
+// // lấy  product detail
+function product_detail_color($id) {
   global $conn;
-  $sql="SELECT  DISTINCT MaMau FROM `chitietsanpham` WHERE  `MaSP` = $id";
-  $resulf=mysqli_query($conn,$sql);
-  $count=mysqli_num_rows($resulf);    
-  if($count==0){
+
+  $sql = "SELECT DISTINCT MaMau FROM chitietsanpham WHERE MaSP = $id";
+  $result = mysqli_query($conn, $sql);
+
+  if ($result) {
+      $count = mysqli_num_rows($result);
+
+      if ($count == 0) {
+          return false;
+      } else {
+          return $result;
+      }
+  } else {
+      // Handle the case where the query fails
       return false;
-    }else{
-      return  $resulf;
-    }     
+  }
+
   mysqli_close($conn);
 }
+
 function product_detail_size($id){
   global $conn;
-  $sql="SELECT  DISTINCT MaSize FROM `chitietsanpham` WHERE  `MaSP` = $id";
-  $resulf=mysqli_query($conn,$sql);
-  $count=mysqli_num_rows($resulf);    
-  if($count==0){
+  
+  $sql = "SELECT MaMau ,MaSize, SUM(SoLuong) AS SoLuong FROM chitietsanpham WHERE MaSP = $id GROUP BY MaSize;";
+  $result = mysqli_query($conn, $sql);
+  
+  if ($result) {
+      $count = mysqli_num_rows($result);
+      
+      if ($count == 0) {
+          return false;
+      } else {
+          return $result;
+      }
+  } else {
+      // Handle the case where the query fails
       return false;
-    }else{
-      return  $resulf;
-    }     
+  }
+
   mysqli_close($conn);
 }
+
 function product_detail_image($id){
   global $conn;
   $sql="SELECT  * FROM `anhsp` WHERE  `MaSP` = $id";
@@ -212,6 +238,7 @@ function product_addtoreview($masp,$id,$nd){
       return  false;
     }     
   mysqli_close($conn);
+  
 }
 /////// tải thêm nhiều sản phẩm với ajax
 if (isset($_POST['page'])==true) {
@@ -244,32 +271,33 @@ if (isset($_POST['page'])==true) {
 };
 
 
+
 // ------------------------------------------ Category MODEL----------------------
-// danh mục 
+// danh mục
 function categorys(){
-  global $conn;
-  $sql=" SELECT * FROM `nhacc` ";
-  $resulf=mysqli_query($conn,$sql);
-    $count=mysqli_num_rows($resulf);    
-    if($count==0){
-        return false;
-      }else{
-        return  $resulf;
-      }     
-    mysqli_close($conn);
+global $conn;
+$sql=" SELECT * FROM `nhacc` ";
+$resulf=mysqli_query($conn,$sql);
+$count=mysqli_num_rows($resulf);
+if($count==0){
+return false;
+}else{
+return $resulf;
 }
-// lấy danh sách sản phẩm theo danh mục
+mysqli_close($conn);
+}
+//lấy danh sách sản phẩm theo danh mục
 function product_category($id){
-  global $conn;
-  $sql=" SELECT * FROM `sanpham` where MaNCC = $id" ;
-  $resulf=mysqli_query($conn,$sql);
-  $count=mysqli_num_rows($resulf);    
-  if($count==0){
-      return false;
-    }else{
-      return  $resulf;
-    }     
-  mysqli_close($conn);
+global $conn;
+$sql=" SELECT * FROM `sanpham` where MaNCC = $id" ;
+$resulf=mysqli_query($conn,$sql);
+$count=mysqli_num_rows($resulf);
+if($count==0){
+return false;
+}else{
+return $resulf;
+}
+mysqli_close($conn);
 }
 
 // -------------------------------------------------------------------------------
@@ -277,102 +305,105 @@ function product_category($id){
 // xử lý đặt hàng
 
 function order_product($nn,$dcnn,$sdtnn,$makh,$tt){
-  global $conn;
-  $sql="INSERT INTO `hoadon`(`MaKH`,  `TinhTrang`, `TongTien`) VALUES ($makh,N'chưa duyệt',$tt)";
-  $resulf = mysqli_query($conn ,$sql); 
-  if($resulf){
-    $sql2="select MaHD from hoadon where MaKH=$makh and TongTien=$tt ORDER BY MaHD DESC limit 1";
-    $rs2=mysqli_query($conn,$sql2);
-    $kq2=mysqli_fetch_array($rs2);$mahd=$kq2['MaHD'];
-    foreach ($_SESSION['cart_product'] as $item) {
-      $DonGia = str_replace(',', '', $item['DonGia']);
-      $ttt=($item['SoLuong']* $DonGia);
-      $masp=$item['MaSP']; $sl=$item['SoLuong']; $dg=$DonGia; $mamau=$item['Mau']; $size=$item['Size'];
-      $sql3="INSERT INTO `chitiethoadon`(`MaHD`, `MaSP`, `SoLuong`, `DonGia`, `ThanhTien`, `Size`, `MaMau`) VALUES($mahd,$masp,$sl,$dg,$ttt,$size,'$mamau')";
-      $rs3=mysqli_query($conn,$sql3);
-      $sql_sl="UPDATE `chitietsanpham` SET `SoLuong`=(`SoLuong`-'$sl') WHERE `MaSP`='$masp' and `MaSize`='$size' and `MaMau`='$mamau'";
-      $rs_sl=mysqli_query($conn,$sql_sl);
-    }
-    if($rs3){
-      if($rs_sl){
-        $sql4="INSERT INTO `nguoinhan`(`MaHD`, `TenNN`, `DiaChiNN`, `SDTNN`) VALUES($mahd,'$nn','$dcnn',$sdtnn)";
-        $rs4=mysqli_query($conn,$sql4);
-        if($rs4){
-          unset($_SESSION['cart_product']);
-          return true;
-        }else{
-          return false;
-        }
-      }	
-    }
-  }
+global $conn;
+$sql="INSERT INTO `hoadon`(`MaKH`, `TinhTrang`, `TongTien`) VALUES ($makh,N'chưa duyệt',$tt)";
+$resulf = mysqli_query($conn ,$sql);
+if($resulf){
+$sql2="select MaHD from hoadon where MaKH=$makh and TongTien=$tt ORDER BY MaHD DESC limit 1";
+$rs2=mysqli_query($conn,$sql2);
+$kq2=mysqli_fetch_array($rs2);$mahd=$kq2['MaHD'];
+foreach ($_SESSION['cart_product'] as $item) {
+$DonGia = str_replace(',', '', $item['DonGia']);
+$ttt=($item['SoLuong']* $DonGia);
+$masp=$item['MaSP']; $sl=$item['SoLuong']; $dg=$DonGia; $mamau=$item['Mau']; $size=$item['Size'];
+$sql3="INSERT INTO `chitiethoadon`(`MaHD`, `MaSP`, `SoLuong`, `DonGia`, `ThanhTien`, `Size`, `MaMau`)
+VALUES($mahd,$masp,$sl,$dg,$ttt,$size,'$mamau')";
+$rs3=mysqli_query($conn,$sql3);
+$sql_sl="UPDATE `chitietsanpham` SET `SoLuong`=(`SoLuong`-'$sl') WHERE `MaSP`='$masp' and `MaSize`='$size' and
+`MaMau`='$mamau'";
+$rs_sl=mysqli_query($conn,$sql_sl);
+}
+if($rs3){
+if($rs_sl){
+$sql4="INSERT INTO `nguoinhan`(`MaHD`, `TenNN`, `DiaChiNN`, `SDTNN`) VALUES($mahd,'$nn','$dcnn',$sdtnn)";
+$rs4=mysqli_query($conn,$sql4);
+if($rs4){
+unset($_SESSION['cart_product']);
+return true;
+}else{
+return false;
+}
+}
+}
+}
 }
 // -------------------------------------------------------------------------------
 // ------------------------------------------ user MODEL----------------------
 // đăng ký mới
 function newUser($name,$email,$sdt,$address,$password){
-  global $conn;
-  $sql="INSERT INTO `khachhang`( `TenKH`, `Email`, `SDT`, `DiaChi`, `MatKhau`) VALUES ('$name','$email','$sdt','$address','$password')";
-  $resulf=mysqli_query($conn,$sql);
-  if($resulf){
-      return true;
-    }else{
-      return false;
-    }     
-  mysqli_close($conn);
+global $conn;
+$sql="INSERT INTO `khachhang`( `TenKH`, `Email`, `SDT`, `DiaChi`, `MatKhau`) VALUES
+('$name','$email','$sdt','$address','$password')";
+$resulf=mysqli_query($conn,$sql);
+if($resulf){
+return true;
+}else{
+return false;
+}
+mysqli_close($conn);
 }
 // -------------------------
 // select khách hàng
 function selectKH($id){
-  global $conn;
-  $sql="SELECT * FROM khachhang WHERE MaKH = $id";
-  $resulf=mysqli_query($conn,$sql);
-  $count=mysqli_num_rows($resulf); 
-  if($count==0){
-      return false;
-    }else{
-      return mysqli_fetch_array($resulf);
-    }     
-  mysqli_close($conn);
+global $conn;
+$sql="SELECT * FROM khachhang WHERE MaKH = $id";
+$resulf=mysqli_query($conn,$sql);
+$count=mysqli_num_rows($resulf);
+if($count==0){
+return false;
+}else{
+return mysqli_fetch_array($resulf);
+}
+mysqli_close($conn);
 }
 // -------------------------
 
 // update khách hàng
 function update_user($id,$ten,$sdt,$dc,$matkhau){
-  global $conn;
-  $sql="UPDATE `khachhang` SET `TenKH`='$ten',`SDT`=$sdt,`DiaChi`='$dc',`MatKhau`='$matkhau' WHERE `MaKH`=$id";
-  $resulf=mysqli_query($conn,$sql);
-  return $resulf;
-  mysqli_close($conn);
+global $conn;
+$sql="UPDATE `khachhang` SET `TenKH`='$ten',`SDT`=$sdt,`DiaChi`='$dc',`MatKhau`='$matkhau' WHERE `MaKH`=$id";
+$resulf=mysqli_query($conn,$sql);
+return $resulf;
+mysqli_close($conn);
 }
 // -------------------------
 // đơn hàng của khách hàng
 function bill_user($id){
-  global $conn;
-  $sql="SELECT * FROM `hoadon` WHERE MaKH = $id ORDER BY NgayDat DESC";
-  $resulf=mysqli_query($conn,$sql);
-  $count=mysqli_num_rows($resulf); 
-  if($count==0){
-      return false;
-    }else{
-      return $resulf;
-    }     
-  mysqli_close($conn);
+global $conn;
+$sql="SELECT * FROM `hoadon` WHERE MaKH = $id ORDER BY NgayDat DESC";
+$resulf=mysqli_query($conn,$sql);
+$count=mysqli_num_rows($resulf);
+if($count==0){
+return false;
+}else{
+return $resulf;
+}
+mysqli_close($conn);
 }
 // -------------------------------------------------------------------------------
-// ------------------------------------------ admin  ----------------------
+// ------------------------------------------ admin ----------------------
 // chi tiết hóa đơn
 function bill_detail($id){
-  global $conn;
-  $sql="SELECT * FROM chitiethoadon WHERE MaHD = $id" ;
-  $resulf=mysqli_query($conn,$sql);
-  $count=mysqli_num_rows($resulf); 
-  if($count==0){
-      return false;
-    }else{
-      return $resulf;
-    }     
-  mysqli_close($conn);
+global $conn;
+$sql="SELECT * FROM chitiethoadon WHERE MaHD = $id" ;
+$resulf=mysqli_query($conn,$sql);
+$count=mysqli_num_rows($resulf);
+if($count==0){
+return false;
+}else{
+return $resulf;
+}
+mysqli_close($conn);
 }
 
 // -------------------------------------------------------------------------------

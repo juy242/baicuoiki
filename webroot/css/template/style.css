@@ -7714,14 +7714,14 @@ h1, h2, h3, h4, h5,
     padding: 1.5em; }
     .product-entry .desc h2 {
       text-transform: uppercase;
-      font-size: 13px;
+      font-size: 12px;
       font-weight: 800; }
       .product-entry .desc h2 a {
         color: #000; }
     .product-entry .desc span.price {
       display: block;
-      font-family: "Rokkitt", Georgia, serif;
-      font-size: 18px;
+      /* font-family: "Rokkitt", Georgia, serif; */
+      font-size: 15px;
       color: #c71010;
       font-weight: 400; }
 
@@ -8849,3 +8849,145 @@ input[type="text"] {
 
 .js .animate-box {
   opacity: 0; }
+
+
+
+
+
+
+  
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+
+
+.disabled-color {
+  opacity: 0.5; 
+
+}
+
+.card__cart, .card__heart{
+    font-size: 25px;
+    position: absolute;
+    left: 20px;
+    top: 15px;
+    cursor: pointer;
+}
+
+.card__cart{
+    left: unset;
+    right: 20px;
+}
+
+.card__image{
+    width: 90%;
+    transition: 0.5s;
+}
+
+.card__image img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /*fullhd*/
+}
+
+.card__title, .card__price{
+    font-size: 25px;
+    font-weight: bold;
+    text-align: center;
+    transition: 0.5s;
+}
+
+.card__title {
+    color: var(--primary-color);
+}
+
+.card__color, .card__size{
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+
+.card__size span{
+    padding: 1px 10px;
+    background: #dadada;
+    color: black;
+    border-radius: 5px;
+    margin: 0 5px;
+    cursor: pointer;
+}
+
+.card__color span{
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    margin: 0 5px;
+    cursor: pointer;
+}
+
+.card__color--green{
+    background: green;
+}
+
+.card__color--red{
+    background: red;
+}
+
+.card__color--black{
+    background: black;
+}
+
+.card__action button{
+    background: var(--primary-color);
+    border: none;
+    outline: none;
+    color: white;
+    padding: 10PX 20PX;
+    border-radius: 5PX;
+    font-weight: bold;
+    margin-right: 10px;
+    transition: 0.5s;
+    cursor: pointer;
+}
+
+.card__action button:hover{
+    transform: scale(0.9);
+}
+
+.card:hover .card__image{
+    transform: translateY(-90px) rotate(-20deg);/*dich chuyen len tren 90 px,  quay mot goc 20 do*/
+}
+
+.card:hover .card__title {
+    transform: translate(-38px, -72px);
+}
+
+.card:hover .card__price{
+    transform: translate(-100px, -72px);
+}
+
+.card__size{
+    margin-top: 150px;
+}
+
+.card__size, .card__color, .card__action{
+    visibility: hidden;
+    opacity: 0;
+    transition: 0.5s;
+    transition-delay: 0.2s;
+}
+
+.card:hover .card__size, 
+.card:hover .card__color, 
+.card:hover .card__action{
+    visibility: visible;
+    opacity: 100;
+    transition: 0.5s;
+
+}
+
+
+.card:hover .card__size{
+    margin-top: -30px;
+
+}

@@ -1,4 +1,3 @@
-
 <?php
 include_once('../../model/database.php');
 	// Thêm Sản Phẩm
@@ -112,31 +111,67 @@ if(isset($_POST['xlsua'])){
 }
 			
 
-		
-	//-----------------------------------------------------------------------------------------	
-	// Xóa Sản Phẩm
-if(isset($_GET['xoa'])){
-	$masp=$_GET['masp'];
-	$delete="DELETE FROM `chitietsanpham` WHERE MaSP = $masp";
-	$rs_d=mysqli_query($conn,$delete);
-	if(isset($rs_d)){
-		$delete2="DELETE FROM `sanpham` WHERE MaSP = $masp";
-		$rs_d2=mysqli_query($conn,$delete2);
-		if(isset($rs_d2)){
-			$delete3="DELETE FROM `anhsp` WHERE MaSP = $masp";
-			$rs_d3=mysqli_query($conn,$delete3);
-			if(isset($rs_d3)){
-				header('location:../index.php?action=sanpham&thongbao=xoa');
-			}else{
-				header('location:../index.php?action=sanpham&view=themsp&thongbao=loi');
-			}
 			
-		}
+
 		
-	}
-}    	
+
+//-----------------------------------------------------------------------------------------	
+//-----------------------------------------------------------------------------------------	
+if(isset($_GET['xoa'])){
+    $masp = $_GET['masp'];
+
+    // Delete from phieuxuat table
+    $delete4 = "DELETE FROM `phieuxuat` WHERE MaSP = $masp";
+    $rs_d4 = mysqli_query($conn, $delete4);
+
+    if($rs_d4){
+        // Delete from sanphamkhuyenmai table
+        $delete5 = "DELETE FROM `sanphamkhuyenmai` WHERE MaSP = $masp";
+        $rs_d5 = mysqli_query($conn, $delete5);
+
+        // Delete from chitietsanpham table
+        $delete = "DELETE FROM `chitietsanpham` WHERE MaSP = $masp";
+        $rs_d = mysqli_query($conn, $delete);
+
+        if($rs_d){
+            // Delete from phieunhap table
+            $delete_phieunhap = "DELETE FROM `phieunhap` WHERE MaSP = $masp";
+            $rs_phieunhap = mysqli_query($conn, $delete_phieunhap);
+
+            if($rs_phieunhap){
+                // Delete from anhsp table
+                $delete3 = "DELETE FROM `anhsp` WHERE MaSP = $masp";
+                $rs_d3 = mysqli_query($conn, $delete3);
+
+                if($rs_d3){
+                    // Delete from sanpham table
+                    $delete2 = "DELETE FROM `sanpham` WHERE MaSP = $masp";
+                    $rs_d2 = mysqli_query($conn, $delete2);
+
+                    if($rs_d2){
+                        header('location:../index.php?action=sanpham&thongbao=xoa');
+                    } else {
+                        header('location:../index.php?action=sanpham&view=themsp&thongbao=loi');
+                    }
+                } else {
+                    header('location:../index.php?action=sanpham&view=themsp&thongbao=loi');
+                }
+            } else {
+                header('location:../index.php?action=sanpham&view=themsp&thongbao=loi');
+            }
+        } else {
+            header('location:../index.php?action=sanpham&view=themsp&thongbao=loi');
+        }
+    } else {
+        header('location:../index.php?action=sanpham&view=themsp&thongbao=loi');
+    }
+}
+
+
+
+	
 
 		//-----------------------------------------------------------------------------------------	
 		// Thêm màu 
 		
-		 ?>		
+		 ?>

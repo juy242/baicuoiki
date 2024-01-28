@@ -1,4 +1,3 @@
-
 <?php
 include_once('../../model/database.php');
 	// Thêm màu
@@ -29,12 +28,16 @@ include_once('../../model/database.php');
 	//----------------------------------------
 // xóa màu
 if(isset($_GET['xoa'])){
-		$madm=$_GET['madm'];
-		$sql="delete  from danhmuc where MaDM='$madm'";
-		$rs=mysqli_query($conn,$sql);
-		if(isset($rs)){
-			header('location:../index.php?action=danhmuc&view=themdm&thongbao=xoa');
-		}else{
-			header('location:../index.php?action=danhmuc&view=themdm&thongbao=loi');
-		}
-	}
+    $madm = $_GET['madm'];
+
+    // Delete the category and let cascading delete handle related records in other tables
+    $sql_delete_danhmuc = "DELETE FROM danhmuc WHERE MaDM='$madm'";
+    $rs_delete_danhmuc = mysqli_query($conn, $sql_delete_danhmuc);
+
+    // Check for success and handle accordingly
+    if ($rs_delete_danhmuc) {
+        header('location:../index.php?action=danhmuc&view=themdm&thongbao=xoa');
+    } else {
+        header('location:../index.php?action=danhmuc&view=themdm&thongbao=loi');
+    }
+}
